@@ -60,7 +60,7 @@ client.on('interactionCreate', async (interaction) => {
 client.on('interactionCreate', async interaction => {
     if (interaction.type !== InteractionType.ModalSubmit) return;
     if (interaction.customId === 'form') {
-        const { guild, member, user } = interaction;
+        const { guild, user } = interaction;
 
         let onay = db.get(`onay_${guild.id}`);
         let logg = db.get(`log_${guild.id}`);
@@ -94,31 +94,20 @@ client.on('interactionCreate', async interaction => {
             );
             
         adminRol = db.get(`adminRol_${guild.id}`);
-        let a = await client.users.fetch(id);
-        let avatar = a.avatar;
-        let link = "https://cdn.discordapp.com/avatars/" + id + "/" + avatar + ".png?size=1024";
-
-        const botUser = client.users.cache.get(id);
-
-        const author = {
-          name: `${botUser.username} | Reddedildi`,
-          iconURL: botUser.displayAvatarURL({ format: "png", size: 1024 })
-        };
 
 const embed = new EmbedBuilder()
-    .setAuthor(author)
+    .setTitle(`Başvuru Gönderildi!`)
     .setDescription("**• Tüyo:** Onaylamak, reddetmek veya botu eklemek için aşağıdaki butonları kullan.")
-    .addFields({ name: '• Bot İsmi', value: `${botUser.username}`, inline: true })
-    .addFields({ name: '• Bot Etiketi', value: `${botUser}`, inline: true })
+    .addFields({ name: '• Bot İsmi', value: `<@${id}>`, inline: true })
     .addFields({ name: '• Bot Kimliği', value: `${id}`, inline: true })
     .addFields({ name: 'Bot Prefixi', value: `${codeBlock("yaml", `${prefix}`)}`, inline: false })
     .addFields({ name: 'Bot Sahibi', value: `${codeBlock("yaml", `${user.username}`)}`, inline: false })
-    .setColor("Yellow")
+    .setColor("Red")
         const logKanalID = await db.get(`onay_${guild.id}`);
         const log = client.channels.cache.get(logKanalID);
 
         log.send({ content: "<@&" + adminRol + ">", embeds: [embed], components: [row] }).then((mesaj) => {
-            interaction.reply({ content: `<a:Tik:900089759911776266> **|** ${sahip} **${botUser.username}** isimli bot başarıyla sisteme eklendi. *[Yetkililerden geri dönüş gelene kadar bekleyin!]*`, ephemeral: true });
+            interaction.reply({ content: `<a:Tik:900089759911776266> **|** ${sahip}, <@${id}> isimli bot başarıyla sisteme eklendi. *[Yetkililerden geri dönüş gelene kadar bekleyin!]*`, ephemeral: true });
             db.set(`bot_${mesaj.id}`, { user: user.id, bot: id });
             db.set(`ekledi_${user.id}`, id);
         });
@@ -143,9 +132,6 @@ client.on('interactionCreate', async interaction => {
 
         if (!interaction.member.roles.cache.has(admin)) return interaction.reply({ content: "Bu işlemi gerçekleştirmek için <@&" + admin + "> rolüne sahip olmalısın!", ephemeral: true })
 
-        let a = await client.users.fetch(bot);
-        let avatar = a.avatar
-
         const botUser = client.users.cache.get(data.bot);
         const author = {
           name: `${botUser.username} | Reddedildi`,
@@ -167,13 +153,13 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.customId === "onayla") {
         const { guild, member } = interaction;
-        let admin = db.get(`adminRol_${interaction.guild.id}`);
+        let admin = db.get(`adminRol_${guild.id}`);
         if (!interaction.member.roles.cache.has(admin)) {
           return interaction.reply({ content: "Bu işlemi gerçekleştirmek için <@&" + admin + "> rolüne sahip olmalısın!", ephemeral: true });
         }
       
         let message = await interaction.channel.messages.fetch(interaction.message.id);
-        const logKanalID = await db.fetch(`log_${interaction.guild.id}`);
+        const logKanalID = await db.fetch(`log_${guild.id}`);
         const log = client.channels.cache.get(logKanalID);
         let dev = db.get(`devRol_${guild.id}`);
         let botrol = db.get(`botRol_${guild.id}`);
@@ -181,8 +167,6 @@ client.on('interactionCreate', async interaction => {
         var uye = data.user;
         var bot = data.bot;
         let a = await client.users.fetch(bot);
-        let avatar = a.avatar;
-        let link = "https://cdn.discordapp.com/avatars/" + bot + "/" + avatar + ".png?size=1024";
       
         let eklendimi = interaction.guild.members.cache.get(bot);
         const hata = new EmbedBuilder()
@@ -264,6 +248,8 @@ const unban = new ActionRowBuilder()
 
 client.on('guildMemberRemove', async member => {
 
+    var data2 = db.fetch(`bot_${member.message.id}`);
+
     const logKanalID = await db.get(`log_${member.guild.id}`)
     const log = client.channels.cache.get(logKanalID)
 
@@ -272,10 +258,11 @@ client.on('guildMemberRemove', async member => {
 
     let Data = data
 
+    const botUser = client.users.cache.get(data2.bot);
     const BanEmbed = new EmbedBuilder()
         .setColor("Red")
         .setTitle("Banlandı!")
-        .setDescription(`<a:danger:1091095742711599144> **|** \`${member.user.username}\` isimli kullanıcı sunucudan çıktığı için **botu** sunucudan banlandı!`)
+        .setDescription(`<a:danger:1091095742711599144> **|** \`${member.user.username}\` isimli kullanıcı sunucudan çıktığı için **botu** ${botUser.username} sunucudan banlandı!`)
 
     member.guild.members.ban(Data).catch(() => { })
     log.send({ embeds: [BanEmbed], components: [unban] }).then(mesaj => {
