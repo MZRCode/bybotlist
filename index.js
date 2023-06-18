@@ -248,8 +248,6 @@ const unban = new ActionRowBuilder()
 
 client.on('guildMemberRemove', async member => {
 
-    var data2 = db.fetch(`bot_${member.message.id}`);
-
     const logKanalID = await db.get(`log_${member.guild.id}`)
     const log = client.channels.cache.get(logKanalID)
 
@@ -258,11 +256,10 @@ client.on('guildMemberRemove', async member => {
 
     let Data = data
 
-    const botUser = client.users.cache.get(data2.bot);
     const BanEmbed = new EmbedBuilder()
         .setColor("Red")
         .setTitle("Banlandı!")
-        .setDescription(`<a:danger:1091095742711599144> **|** \`${member.user.username}\` isimli kullanıcı sunucudan çıktığı için **botu** ${botUser.username} sunucudan banlandı!`)
+        .setDescription(`<a:danger:1091095742711599144> **|** \`${member.user.username}\` isimli kullanıcı sunucudan çıktığı için **botu** <@${data}> sunucudan banlandı!`)
 
     member.guild.members.ban(Data).catch(() => { })
     log.send({ embeds: [BanEmbed], components: [unban] }).then(mesaj => {
@@ -270,7 +267,7 @@ client.on('guildMemberRemove', async member => {
     })
 })
 
-// Banı Kaldır Button 
+// Banı Kaldır Kod
 client.on('interactionCreate', async interaction => {
     if (!interaction.isButton()) return;
 
