@@ -264,7 +264,7 @@ const unban = new ActionRowBuilder()
 
 client.on('guildMemberRemove', async member => {
 
-    const logKanalID = await db.get(`log_${interaction.guild.id}`)
+    const logKanalID = await db.get(`log_${member.guild.id}`)
     const log = client.channels.cache.get(logKanalID)
 
     var data = db.fetch(`ekledi_${member.id}`)
