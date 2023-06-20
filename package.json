@@ -10,7 +10,7 @@
     "mzr-development",
     "mzr-dev"
   ],
-  "author": "mrmzr",
+  "author": "mzrdev",
   "license": "ISC",
   "dependencies": {
     "@top-gg/sdk": "^3.1.5",
