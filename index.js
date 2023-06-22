@@ -313,24 +313,82 @@ client.on('interactionCreate', async interaction => {
     if (interaction.customId === "ayarlar") {
         const { guild } = interaction;
 
-        let log = db.get(`log_${guild.id}`)
-        let onayKanal = db.get(`onay_${guild.id}`)
-        let botEkle = db.get(`botekle_${guild.id}`)
-        let botRol = db.get(`botRol_${guild.id}`)
-        let devRol = db.get(`devRol_${guild.id}`)
-        let adminRol = db.get(`adminRol_${guild.id}`)
+        let logID = db.get(`log_${guild.id}`)
+        let onayKanalID = db.get(`onay_${guild.id}`)
+        let botEkleID = db.get(`botekle_${guild.id}`)
+        let botRolID = db.get(`botRol_${guild.id}`)
+        let devRolID = db.get(`devRol_${guild.id}`)
+        let adminRolID = db.get(`adminRol_${guild.id}`)
 
-        const mesaj = new EmbedBuilder()
+        const embed = new EmbedBuilder()
             .setTitle("BotList Ayarları")
-            .addFields(
-                { name: "<:book:904101654834606102> **Log Kanalı**", value: `<#${log || "Ayarlanmamış!"}>`, inline: true },
-                { name: "<:verified:910523666620645378> **Onay & Red Kanalı**", value: `<#${onayKanal || "Ayarlanmamış!"}>`, inline: true },
-                { name: "<:link:904101655455358976> **Bot Ekle Kanalı**", value: `<#${botEkle || "Ayarlanmamış!"}>`, inline: true },
-                { name: "<:BOTS:1099791011657547876> **Bot Rolü**", value: `<@&${botRol || "Ayarlanmamış!"}>`, inline: true },
-                { name: "<:Developer:899715020873678888> **Developer Rolü**", value: `<@&${devRol || "Ayarlanmamış!"}>`, inline: true },
-                { name: "<:moderator:904316800840380448> **Yetkili Rolü**", value: `<@&${adminRol || "Ayarlanmamış!"}>`, inline: true }
-            )
             .setColor("Blurple")
+        
+            const log = interaction.guild.channels.cache.get(logID);
+        if (log) {
+            embed.addFields([
+                {name: "<:book:904101654834606102> Log Kanalı", value: log.toString(), inline: false}
+            ]);
+        } else {
+            embed.addFields([
+                {name: "<:book:904101654834606102> Log Kanalı*", value: `Ayarlanmamış <:hayir:1110297826631622657>`, inline: false}
+            ]);
+        }
+      
+            const onayKanal = interaction.guild.channels.cache.get(onayKanalID);
+        if (onayKanal) {
+            embed.addFields([
+                {name: "<:verified:910523666620645378> Onay & Red Kanalı", value: onayKanal.toString(), inline: false}
+            ]);
+        } else {
+            embed.addFields([
+                {name: "<:verified:910523666620645378> Onay & Red Kanalı", value: `Ayarlanmamış <:hayir:1110297826631622657>`, inline: false}
+            ]);
+        }
+            
+            const botEkle = interaction.guild.channels.cache.get(botEkleID);
+        if (botEkle) {
+            embed.addFields([
+                {name: "<:link:904101655455358976> Bot Ekle Kanalı", value: botEkle.toString(), inline: false}
+            ]);
+        } else {
+            embed.addFields([
+                {name: "<:link:904101655455358976> Bot Ekle Kanalı", value: `Ayarlanmamış <:hayir:1110297826631622657>`, inline: false}
+            ]);
+        }
+                  
+            const botRol = interaction.guild.roles.cache.get(botRolID);
+        if (botRol) {
+            embed.addFields([
+                {name: "<:BOTS:1099791011657547876> Bot Rolü", value: botRol.toString(), inline: false}
+            ]);
+        } else {
+            embed.addFields([
+                {name: "<:BOTS:1099791011657547876> Bot Rolü", value: `Ayarlanmamış <:hayir:1110297826631622657>`, inline: false}
+            ]);
+        }
+                        
+            const devRol = interaction.guild.roles.cache.get(devRolID);
+        if (devRol) {
+            embed.addFields([
+                {name: "<:Developer:899715020873678888> Developer Rolü", value: devRol.toString(), inline: false}
+            ]);
+        } else {
+            embed.addFields([
+                {name: "<:Developer:899715020873678888> Developer Rolü", value: `Ayarlanmamış <:hayir:1110297826631622657>`, inline: false}
+            ]);
+        }
+                              
+            const adminRol = interaction.guild.roles.cache.get(adminRolID);
+        if (adminRol) {
+            embed.addFields([
+                {name: "<:moderator:904316800840380448> Yetkili Rolü", value: adminRol.toString(), inline: false}
+            ]);
+        } else {
+            embed.addFields([
+                {name: "<:moderator:904316800840380448> Yetkili Rolü", value: `Ayarlanmamış <:hayir:1110297826631622657>`, inline: false}
+            ]);
+        }
 
         const yetki = new EmbedBuilder()
             .setTitle("Yetersiz Yetki <:cross:904102980553437184>")
@@ -338,7 +396,7 @@ client.on('interactionCreate', async interaction => {
             .setColor("Red")
             if (!member.permissions.has(PermissionFlagsBits.ManageChannels)) return interaction.reply({ embeds: [yetki], ephemeral: true });
 
-        interaction.reply({ embeds: [mesaj], ephemeral: true }).catch(() => { })
+        interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => { })
     }
 })
 
