@@ -13,7 +13,6 @@
   "author": "mzrdev",
   "license": "ISC",
   "dependencies": {
-    "@top-gg/sdk": "^3.1.5",
     "ascii-table": "^0.0.9",
     "croxydb": "^0.0.7",
     "discord-html-transcripts": "^3.1.4",
