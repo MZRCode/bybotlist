@@ -11,7 +11,7 @@ module.exports = {
         .setDescription('Seçtiğiniz Rolü Sıfırlar')
         .setRequired(true)
         .addChoices(
-          { name: 'Herşeyi Sıfırla', value: 'hepsi' },
+          { name: 'Tüm Ayarları Sıfırla', value: 'hepsi' },
           { name: 'Bot Rolü', value: 'bot_rol' },
           { name: 'Developer Rolü', value: 'developer_rol' },
           { name: 'Yetkili Rolü', value: 'yetkili_rol' },
