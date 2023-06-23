@@ -16,13 +16,13 @@ module.exports = {
 
         const guildID = interaction.guild.id;
 
-        let log = db.get(`log_${guildID}`)
-        let onayRed = db.get(`onay_${guildID}`)
-        let botEkle = db.get(`botekle_${guildID}`)
-        let botRolu = db.get(`botRol_${guildID}`)
-        let devRol = db.get(`devRol_${guildID}`)
-        let adminRol = db.get(`adminRol_${guildID}`)
-      
+        let logID = db.get(`log_${guildID}`)
+        let onayKanalID = db.get(`onay_${guildID}`)
+        let botEkleID = db.get(`botekle_${guildID}`)
+        let botRolID = db.get(`botRol_${guildID}`)
+        let devRolID = db.get(`devRol_${guildID}`)
+        let adminRolID = db.get(`adminRol_${guildID}`)
+
         const embed = new EmbedBuilder()
             .setAuthor({ name: interaction.guild.name, iconURL: interaction.guild.iconURL() || "https://cdn.discordapp.com/emojis/1119027206908284948.gif" })
             .setTitle("Sunucu Ayarları <:settings:904101655535034448>")
@@ -30,7 +30,7 @@ module.exports = {
             .setFooter({ text: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
             .setTimestamp();
 
-        const logKanal = interaction.guild.channels.cache.get(log);
+        const logKanal = interaction.guild.channels.cache.get(onayKanalID);
         if (logKanal) {
             embed.addFields([
                 {name: "<:book:904101654834606102> Log Kanalı", value: logKanal.toString(), inline: true}
@@ -41,7 +41,7 @@ module.exports = {
             ]);
         }
 
-        const onayredKanal = interaction.guild.channels.cache.get(onayRed);
+        const onayredKanal = interaction.guild.channels.cache.get(onayKanalID);
         if (onayredKanal) {
             embed.addFields([
                 {name: "<:verified:910523666620645378> Onay & Red Kanalı", value: onayredKanal.toString(), inline: true}
@@ -52,7 +52,7 @@ module.exports = {
             ]);
         }
 
-        const botekleKanal = interaction.guild.channels.cache.get(botEkle);
+        const botekleKanal = interaction.guild.channels.cache.get(botEkleID);
         if (botekleKanal) {
             embed.addFields([
                 {name: "<:link:904101655455358976> Bot Ekle Kanalı", value: botekleKanal.toString(), inline: true}
@@ -63,7 +63,7 @@ module.exports = {
             ]);
         }
 
-        const botRol = interaction.guild.roles.cache.get(botRolu);
+        const botRol = interaction.guild.roles.cache.get(botRolID);
         if (botRol) {
             embed.addFields([
                 {name: "<:BOTS:1099791011657547876> Bot Rolü", value: botRol.toString(), inline: true}
@@ -74,7 +74,7 @@ module.exports = {
             ]);
         }
 
-        const developerRol = interaction.guild.roles.cache.get(devRol);
+        const developerRol = interaction.guild.roles.cache.get(devRolID);
         if (developerRol) {
             embed.addFields([
                 {name: "<:Developer:899715020873678888> Developer Rolü", value: developerRol.toString(), inline: true}
@@ -85,7 +85,7 @@ module.exports = {
             ]);
         }
         
-        const yetkiliRol = interaction.guild.roles.cache.get(adminRol);
+        const yetkiliRol = interaction.guild.roles.cache.get(adminRolID);
         if (yetkiliRol) {
             embed.addFields([
                 {name: "<:moderator:904316800840380448> Yetkili Rolü", value: yetkiliRol.toString(), inline: true}
