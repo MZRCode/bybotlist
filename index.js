@@ -402,4 +402,4 @@ client.on('interactionCreate', async interaction => {
     }
 })
 
-client.login(client.config.token)
+client.login(token)
