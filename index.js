@@ -2,6 +2,7 @@ const { Client, GatewayIntentBits, Partials, Collection, PermissionFlagsBits, co
 const { Guilds, GuildMembers, GuildMessages } = GatewayIntentBits;
 const { User, Message, GuildMember, ThreadMember } = Partials;
 const db = require('croxydb');
+const { token } = require("./config.json");
 
 const client = new Client({ 
     intents: [Guilds, GuildMembers, GuildMessages],
