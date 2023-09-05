@@ -116,86 +116,90 @@ const embed = new EmbedBuilder()
 client.on('interactionCreate', async interaction => {
     if (!interaction.isButton()) return;
 
-    if (interaction.customId === "reddet") {
+if (interaction.customId === "reddet") {
 
-        const { guild, member } = interaction;
+    const { guild, member } = interaction;
 
-        let message = await interaction.channel.messages.fetch(interaction.message.id)
-        const logKanalID = await db.get(`log_${guild.id}`)
-        const log = client.channels.cache.get(logKanalID)
-        var data = db.fetch(`bot_${interaction.message.id}`)
-        var uye = data.user
-        var bot = data.bot
+    let message = await interaction.channel.messages.fetch(interaction.message.id)
+    const logKanalID = await db.get(`log_${guild.id}`)
+    const log = client.channels.cache.get(logKanalID)
+    var data = db.fetch(`bot_${interaction.message.id}`)
+    var uye = data.user
+    var bot = data.bot
 
-        let admin = db.get(`adminRol_${guild.id}`)
+    let admin = db.get(`adminRol_${guild.id}`)
 
-        if (!interaction.member.roles.cache.has(admin)) return interaction.reply({ content: "Bu işlemi gerçekleştirmek için <@&" + admin + "> rolüne sahip olmalısın!", ephemeral: true })
+    if (!interaction.member.roles.cache.has(admin)) return interaction.reply({ content: "Bu işlemi gerçekleştirmek için <@&" + admin + "> rolüne sahip olmalısın!", ephemeral: true })
 
-        const botUser = client.users.cache.get(data.bot);
-        const author = {
-          name: `${botUser.username} | Reddedildi`,
-          iconURL: botUser.displayAvatarURL({ format: "png", size: 1024 })
-        };
+    // burada await kullandık
+    const botUser = await client.users.fetch(data.bot);
+    const author = {
+      name: `${botUser.username} | Reddedildi`,
+      iconURL: botUser.displayAvatarURL({ format: "png", size: 1024 })
+    };
 
-        const yetkili = member.user;
+    const yetkili = member.user;
 
-        const embed = new EmbedBuilder()
-            .setAuthor(author)
-            .addFields({ name: 'Bot İsmi', value: `${botUser.username}`, inline: true })
-            .addFields({ name: 'Bot Kimliği', value: `${botUser.id}`, inline: true })
-            .addFields({ name: 'Botu Reddeden Yetkili', value: `${yetkili} \`[${yetkili.username}]\``, inline: true })
-            .setColor("Red")
+    const embed = new EmbedBuilder()
+        .setAuthor(author)
+        .addFields({ name: 'Bot İsmi', value: `${botUser.username}`, inline: true })
+        .addFields({ name: 'Bot Kimliği', value: `${botUser.id}`, inline: true })
+        .addFields({ name: 'Botu Reddeden Yetkili', value: `${yetkili} \`[${yetkili.username}]\``, inline: true })
+        .setColor("Red")
 
-        log.send({ content: "<@" + uye + ">", embeds: [embed] })
-        message.delete()
+    log.send({ content: "<@" + uye + ">", embeds: [embed] })
+    message.delete()
+}
+
+if (interaction.customId === "onayla") {
+    const { guild, member } = interaction;
+    let admin = db.get(`adminRol_${guild.id}`);
+    if (!interaction.member.roles.cache.has(admin)) {
+      return interaction.reply({ content: "Bu işlemi gerçekleştirmek için <@&" + admin + "> rolüne sahip olmalısın!", ephemeral: true });
     }
+  
+    let message = await interaction.channel.messages.fetch(interaction.message.id);
+    const logKanalID = await db.fetch(`log_${guild.id}`);
+    const log = client.channels.cache.get(logKanalID);
+    let dev = db.get(`devRol_${guild.id}`);
+    let botrol = db.get(`botRol_${guild.id}`);
+    var data = db.fetch(`bot_${interaction.message.id}`);
+    var uye = data.user;
+    var bot = data.bot;
+    
+    // burada da await kullandık
+    let a = await client.users.fetch(bot);
+  
+    let eklendimi = interaction.guild.members.cache.get(bot);
+    const hata = new EmbedBuilder()
+      .setTitle("Başarısız!")
+      .setDescription("Önce botu sunucuya eklemelisin!")
+      .setColor("Red");
+    if (!eklendimi) {
+      return interaction.reply({ embeds: [hata], ephemeral: true });
+    }
+  
+    
+    const botUser = client.users.cache.get(data.bot);
+    const author = {
+      name: `${botUser.username} | Onaylandı`,
+      iconURL: botUser.displayAvatarURL({ format: "png", size: 1024 })
+    };
 
-    if (interaction.customId === "onayla") {
-        const { guild, member } = interaction;
-        let admin = db.get(`adminRol_${guild.id}`);
-        if (!interaction.member.roles.cache.has(admin)) {
-          return interaction.reply({ content: "Bu işlemi gerçekleştirmek için <@&" + admin + "> rolüne sahip olmalısın!", ephemeral: true });
-        }
-      
-        let message = await interaction.channel.messages.fetch(interaction.message.id);
-        const logKanalID = await db.fetch(`log_${guild.id}`);
-        const log = client.channels.cache.get(logKanalID);
-        let dev = db.get(`devRol_${guild.id}`);
-        let botrol = db.get(`botRol_${guild.id}`);
-        var data = db.fetch(`bot_${interaction.message.id}`);
-        var uye = data.user;
-        var bot = data.bot;
-        let a = await client.users.fetch(bot);
-      
-        let eklendimi = interaction.guild.members.cache.get(bot);
-        const hata = new EmbedBuilder()
-          .setTitle("Başarısız!")
-          .setDescription("Önce botu sunucuya eklemelisin!")
-          .setColor("Red");
-        if (!eklendimi) {
-          return interaction.reply({ embeds: [hata], ephemeral: true });
-        }
-      
-        const botUser = client.users.cache.get(data.bot);
-        const author = {
-          name: `${botUser.username} | Onaylandı`,
-          iconURL: botUser.displayAvatarURL({ format: "png", size: 1024 })
-        };
-
-        const yetkili = member.user;
-        
-        const embed = new EmbedBuilder()
-          .setAuthor(author)
-          .addFields({ name: 'Bot İsmi', value: `${botUser.username}`, inline: true })
-          .addFields({ name: 'Bot Kimliği', value: `${botUser.id}`, inline: true })
-          .addFields({ name: 'Botu Onaylayan Yetkili', value: `${yetkili} \`[${yetkili.username}]\``, inline: true })
-          .setColor("Green");
-      
-        log.send({ content: "<@" + uye + ">", embeds: [embed] });
-        interaction.guild.members.cache.get(uye).roles.add(dev).catch(err => {});
-        interaction.guild.members.cache.get(bot).roles.add(botrol).catch(err => {});
-        message.delete();
-      }
+    const yetkili = member.user;
+    
+    const embed = new EmbedBuilder()
+      .setAuthor(author)
+      .addFields({ name: 'Bot İsmi', value: `${botUser.username}`, inline: true })
+      .addFields({ name: 'Bot Kimliği', value: `${botUser.id}`, inline: true })
+      .addFields({ name: 'Botu Onaylayan Yetkili', value: `${yetkili} \`[${yetkili.username}]\``, inline: true })
+      .setColor("Green");
+  
+    log.send({ content: "<@" + uye + ">", embeds: [embed] });
+    interaction.guild.members.cache.get(uye).roles.add(dev).catch(err => {});
+    interaction.guild.members.cache.get(bot).roles.add(botrol).catch(err => {});
+    message.delete();
+  }
 })
 
 client.on('interactionCreate', async (interaction) => {
