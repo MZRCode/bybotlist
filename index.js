@@ -131,7 +131,6 @@ if (interaction.customId === "reddet") {
 
     if (!interaction.member.roles.cache.has(admin)) return interaction.reply({ content: "Bu işlemi gerçekleştirmek için <@&" + admin + "> rolüne sahip olmalısın!", ephemeral: true })
 
-    // burada await kullandık
     const botUser = await client.users.fetch(data.bot);
     const author = {
       name: `${botUser.username} | Reddedildi`,
@@ -167,7 +166,6 @@ if (interaction.customId === "onayla") {
     var uye = data.user;
     var bot = data.bot;
     
-    // burada da await kullandık
     let a = await client.users.fetch(bot);
   
     let eklendimi = interaction.guild.members.cache.get(bot);
@@ -180,7 +178,7 @@ if (interaction.customId === "onayla") {
     }
   
     
-    const botUser = client.users.cache.get(data.bot);
+    const botUser = await client.users.fetch(data.bot);
     const author = {
       name: `${botUser.username} | Onaylandı`,
       iconURL: botUser.displayAvatarURL({ format: "png", size: 1024 })
