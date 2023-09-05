@@ -129,20 +129,17 @@ if (interaction.customId === "reddet") {
 
     let admin = db.get(`adminRol_${guild.id}`)
 
-    if (!interaction.member.roles.cache.has(admin)) return interaction.reply({ content: "Bu işlemi gerçekleştirmek için <@&" + admin + "> rolüne sahip olmalısın!", ephemeral: true })
+    if (!member.roles.cache.has(admin)) return interaction.reply({ content: "Bu işlemi gerçekleştirmek için <@&" + admin + "> rolüne sahip olmalısın!", ephemeral: true })
 
-    const botUser = await client.users.fetch(data.bot);
-    const author = {
-      name: `${botUser.username} | Reddedildi`,
-      iconURL: botUser.displayAvatarURL({ format: "png", size: 1024 })
-    };
+	let a = await client.users.fetch(bot);
+    const author = { name: `${a.username} | Reddedildi`, iconURL: a.displayAvatarURL({ format: "png", size: 1024 }) };
 
     const yetkili = member.user;
 
     const embed = new EmbedBuilder()
         .setAuthor(author)
-        .addFields({ name: 'Bot İsmi', value: `${botUser.username}`, inline: true })
-        .addFields({ name: 'Bot Kimliği', value: `${botUser.id}`, inline: true })
+        .addFields({ name: 'Bot İsmi', value: `${a.username}`, inline: true })
+        .addFields({ name: 'Bot Kimliği', value: `${a.id}`, inline: true })
         .addFields({ name: 'Botu Reddeden Yetkili', value: `${yetkili} \`[${yetkili.username}]\``, inline: true })
         .setColor("Red")
 
@@ -153,7 +150,7 @@ if (interaction.customId === "reddet") {
 if (interaction.customId === "onayla") {
     const { guild, member } = interaction;
     let admin = db.get(`adminRol_${guild.id}`);
-    if (!interaction.member.roles.cache.has(admin)) {
+    if (!member.roles.cache.has(admin)) {
       return interaction.reply({ content: "Bu işlemi gerçekleştirmek için <@&" + admin + "> rolüne sahip olmalısın!", ephemeral: true });
     }
   
@@ -165,37 +162,36 @@ if (interaction.customId === "onayla") {
     var data = db.fetch(`bot_${interaction.message.id}`);
     var uye = data.user;
     var bot = data.bot;
+	
+	console.log('üye' + uye)
+	console.log('bot' + bot)
     
     let a = await client.users.fetch(bot);
+	const uyecik = await guild.members.fetch(uye);
+	const botcuk = await guild.members.fetch(bot);
   
-    let eklendimi = interaction.guild.members.cache.get(bot);
     const hata = new EmbedBuilder()
       .setTitle("Başarısız!")
       .setDescription("Önce botu sunucuya eklemelisin!")
       .setColor("Red");
-    if (!eklendimi) {
+    if (!botcuk) {
       return interaction.reply({ embeds: [hata], ephemeral: true });
     }
   
-    
-    const botUser = await client.users.fetch(data.bot);
-    const author = {
-      name: `${botUser.username} | Onaylandı`,
-      iconURL: botUser.displayAvatarURL({ format: "png", size: 1024 })
-    };
+    const author = { name: `${a.username} | Onaylandı`, iconURL: a.displayAvatarURL({ format: "png", size: 1024 }) };
 
     const yetkili = member.user;
     
     const embed = new EmbedBuilder()
       .setAuthor(author)
-      .addFields({ name: 'Bot İsmi', value: `${botUser.username}`, inline: true })
-      .addFields({ name: 'Bot Kimliği', value: `${botUser.id}`, inline: true })
+      .addFields({ name: 'Bot İsmi', value: `${a.username}`, inline: true })
+      .addFields({ name: 'Bot Kimliği', value: `${a.id}`, inline: true })
       .addFields({ name: 'Botu Onaylayan Yetkili', value: `${yetkili} \`[${yetkili.username}]\``, inline: true })
       .setColor("Green");
   
     log.send({ content: "<@" + uye + ">", embeds: [embed] });
-    interaction.guild.members.cache.get(uye).roles.add(dev).catch(err => {});
-    interaction.guild.members.cache.get(bot).roles.add(botrol).catch(err => {});
+    uyecik.roles.add(dev);
+    botcuk.roles.add(botrol);
     message.delete();
   }
 })
@@ -206,7 +202,7 @@ client.on('interactionCreate', async (interaction) => {
     }
 })
 
-// Sistemi Sıfırla - Button
+// Sistemi Sıfırla - Button Bölümü
 client.on('interactionCreate', async interaction => {
     
     if (!interaction.isButton()) return;
@@ -236,16 +232,14 @@ client.on('interactionCreate', async interaction => {
     }
 })
 
-// Banı Kaldır Button
+// Banı Kaldır Button Bölümü
 const unban = new ActionRowBuilder()
     .addComponents(
         new ButtonBuilder()
             .setEmoji("<a:guard:1081678541457993728>")
             .setLabel("Banı Kaldır")
             .setStyle(ButtonStyle.Danger)
-            .setCustomId("unban")
-    )
-
+            .setCustomId("unban"))
 
 client.on('guildMemberRemove', async member => {
 
@@ -268,7 +262,7 @@ client.on('guildMemberRemove', async member => {
     })
 })
 
-// Banı Kaldır Kod
+// Banı Kaldır Bölümü
 client.on('interactionCreate', async interaction => {
     if (!interaction.isButton()) return;
 
@@ -305,7 +299,7 @@ client.on('interactionCreate', async interaction => {
     }
 })
 
-// Ayarlar Button 
+// Ayarlar Button Bölümü
 client.on('interactionCreate', async interaction => {
     const { member } = interaction;
 
@@ -404,4 +398,4 @@ client.on('interactionCreate', async interaction => {
     }
 })
 
-client.login(token)
+client.login(token);
