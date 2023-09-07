@@ -163,9 +163,6 @@ if (interaction.customId === "onayla") {
     var uye = data.user;
     var bot = data.bot;
 	
-	console.log('üye' + uye)
-	console.log('bot' + bot)
-    
     let a = await client.users.fetch(bot);
 	const uyecik = await guild.members.fetch(uye);
 	const botcuk = await guild.members.fetch(bot);
