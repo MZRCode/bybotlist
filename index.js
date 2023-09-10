@@ -164,14 +164,13 @@ if (interaction.customId === "onayla") {
     var bot = data.bot;
 	
     let a = await client.users.fetch(bot);
-	const uyecik = await guild.members.fetch(uye);
-	const botcuk = await guild.members.fetch(bot);
+    const uyecik = await guild.members.fetch(uye);
   
     const hata = new EmbedBuilder()
       .setTitle("Başarısız!")
       .setDescription("Önce botu sunucuya eklemelisin!")
       .setColor("Red");
-    if (!botcuk) {
+    if (!a) {
       return interaction.reply({ embeds: [hata], ephemeral: true });
     }
   
