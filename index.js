@@ -175,6 +175,7 @@ if (interaction.customId === "onayla") {
     }
   
     const author = { name: `${a.username} | Onaylandı`, iconURL: a.displayAvatarURL({ format: "png", size: 1024 }) };
+    const uyecik = await guild.members.fetch(bot);
 
     const yetkili = member.user;
     
